@@ -54,3 +54,34 @@ export const SomeView = () => {}
 export const SomePage = connect(SomeView)
 ```
 
+
+### Provide Store
+
+```js
+import React from 'react'
+import ReactDom from 'react-dom'
+import { L, createStore } from 'optice'
+import { OptuxProvider } from 'optux'
+
+const initialState = {
+  user: {
+    name: '',
+    email: '',
+  },
+  company: {
+    name: '',
+    okato: 0,
+  }
+}
+
+const store = createStore(initialState)
+
+const Root = () => (
+  <OptuxProvider store={store}>
+    <App />
+  </OptuxProvider>
+)
+
+ReactDom.render(<Root />, document.getElementById('root'))
+```
+
