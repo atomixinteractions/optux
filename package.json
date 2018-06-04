@@ -1,0 +1,56 @@
+{
+  "name": "optux",
+  "version": "0.1.0",
+  "description": "React bindings for Optice",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-lib lib",
+    "clean": "rimraf lib dist es coverage",
+    "coverage": "true",
+    "lint": "eslint .",
+    "prepare": "npm run clean && npm run build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomixinteractions/optux.git"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "keywords": [
+    "optice",
+    "redux",
+    "store",
+    "flux",
+    "state",
+    "manager",
+    "react",
+    "lens",
+    "update"
+  ],
+  "author": "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/atomixinteractions/optux/issues"
+  },
+  "homepage": "https://github.com/atomixinteractions/optux#readme",
+  "devDependencies": {
+    "@atomix/eslint-config-react": "^6.4.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "cross-env": "^5.1.6",
+    "eslint": "^4.19.1",
+    "jest": "^23.1.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-test-renderer": "^16.4.0",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "optice": "^0.1.0",
+    "prop-types": "^15.6.1"
+  }
+}
