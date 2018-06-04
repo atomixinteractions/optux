@@ -2,13 +2,13 @@
 ### Testing commands
 
 ```js
-
 // Command
 
 import { get } from 'root/api'
 import { tokenGet } from './auth/commands'
 
-const userRequest = (id) => ({ execute }) => execute(get)(`/user/${id}`)
+const userRequest = (id) => get(`/user/${id}`)
+const accountRequest = (userId) => get(`/account/${userId}`)
 
 const userFetch = (id) => (
   async ({ readStore, updateStore, execute }) => {
@@ -25,7 +25,7 @@ test('user fetch', async t => {
   const id = 1
   const command = userFetch(1)
 
-  const store = createFakeStore()
+  const store = createTestStore()
 
   const tokenGetSpy = spy().resolve({ data: 'token' })
   const userRequestSpy = spy().resolve({ user: { id } })
