@@ -12,7 +12,8 @@ const todoSelector = createSelector(
   (user, todo) => heavyCalculateTodoList(user, todo),
 )
 
-// optional
+// optional (candidate 1)
+/*
 const TodoList = optice()
   .lenses({
     user: userLens,
@@ -25,8 +26,9 @@ const TodoList = optice()
     todoSelector
   }))
   .withProps((props) => <TodoView todo={props.todo} />)
+*/
 
-const enhance = withOptice(
+const connect = withOptice(
   {
     user: userLens,
   },
@@ -40,8 +42,8 @@ const enhance = withOptice(
 )
 
 // caching per component
-
-const enhance = withOptice(
+// TODO: implement it
+const connect = withOptice(
   () => ({ user: userLens }),
   ({ execute }) => ({ fetch: (id) => execute(userFetch, id + 1) }),
   () => (state, props) => ({ todo: todoSelector(state, props) }),
@@ -49,6 +51,6 @@ const enhance = withOptice(
 
 export const SomeView = () => {}
 
-export const SomePage = enhance(SomeView)
+export const SomePage = connect(SomeView)
 ```
 
