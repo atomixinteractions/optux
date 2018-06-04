@@ -47,10 +47,14 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-test-renderer": "^16.4.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "optice": "^0.1.0"
   },
   "dependencies": {
-    "optice": "^0.1.0",
     "prop-types": "^15.6.1"
+  },
+  "peerDependencies": {
+    "react": "^16.3.0",
+    "optice": "^0.1.0"
   }
 }

@@ -1,3 +1,4 @@
 {
-  "extends": "@atomix/eslint-config"
+  "extends": "@atomix/eslint-config-react",
+  "parser": "babel-eslint"
 }
