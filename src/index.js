@@ -51,24 +51,30 @@ export const withOptice = (lenses, commands) => (WrappedComponent) => {
         super(props, context)
 
         this.store = context[storeKey]
-        this.state = {}
         this.version = 0
         this.unsubscribe = noop
         this.commands = {}
+        this.lensesValues = {}
 
         if (!this.store) {
           throw new TypeError('No store in context! Use OptuxProvider')
         }
 
-        this.state = { store: this.store.getState() }
-
         this.initCommands()
         this.initSelector()
+        this.readLenses()
       }
 
       initCommands() {
         this.commands = Object.keys(commands).reduce((all, name) => {
           all[name] = this.store.execute.bind(null, commands[name])
+          return all
+        }, {})
+      }
+
+      readLenses() {
+        this.lensesValues = Object.keys(lenses).reduce((all, name) => {
+          all[name] = this.store.readState(lenses[name])
           return all
         }, {})
       }
@@ -86,8 +92,9 @@ export const withOptice = (lenses, commands) => (WrappedComponent) => {
         this.unsubscribe = noop
       }
 
-      handleUpdates = (state) => {
-        this.setState({ store: state })
+      handleUpdates = () => {
+        this.readLenses()
+        this.forceUpdate()
       };
 
       subscribeToStore() {
@@ -97,7 +104,7 @@ export const withOptice = (lenses, commands) => (WrappedComponent) => {
       render() {
         return (
           <WrappedComponent
-            {...this.state.store}
+            {...this.lensesValues}
             {...this.commands}
             {...this.props}
           />
