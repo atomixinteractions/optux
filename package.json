@@ -4,7 +4,7 @@
   "description": "React bindings for Optice",
   "main": "lib/index.js",
   "scripts": {
-    "build": "babel src --out-lib lib",
+    "build": "babel src -d lib",
     "clean": "rimraf lib dist es coverage",
     "coverage": "true",
     "lint": "eslint .",
@@ -44,14 +44,17 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "cross-env": "^5.1.6",
     "eslint": "^4.19.1",
     "jest": "^23.1.0",
+    "optice": "^0.2.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-test-renderer": "^16.4.0",
-    "rimraf": "^2.6.2",
-    "optice": "^0.1.0"
+    "rimraf": "^2.6.2"
   },
   "dependencies": {
     "prop-types": "^15.6.1"
