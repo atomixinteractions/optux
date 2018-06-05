@@ -41,57 +41,71 @@ export class OptuxProvider extends Component {
 
 const noop = () => { }
 
-export const withOptice = () => (WrappedComponent) => {
+export const withOptice = (lenses, commands) => (WrappedComponent) => {
   class Optux extends Component {
-    static contextTypes = {
-      [storeKey]: storeShape,
-    };
+      static contextTypes = {
+        [storeKey]: storeShape,
+      };
 
-    constructor(props, context) {
-      super(props, context)
+      constructor(props, context) {
+        super(props, context)
 
-      this.store = context[storeKey]
-      this.state = {}
-      this.version = 0
-      this.unsubscribe = noop
+        this.store = context[storeKey]
+        this.state = {}
+        this.version = 0
+        this.unsubscribe = noop
+        this.commands = {}
 
-      if (!this.store) {
-        throw new TypeError('No store in context! Use OptuxProvider')
+        if (!this.store) {
+          throw new TypeError('No store in context! Use OptuxProvider')
+        }
+
+        this.state = { store: this.store.getState() }
+
+        this.initCommands()
+        this.initSelector()
       }
 
-      this.state = { store: this.store.getState() }
+      initCommands() {
+        this.commands = Object.keys(commands).reduce((all, name) => {
+          all[name] = this.store.execute.bind(null, commands[name])
+          return all
+        }, {})
+      }
 
-      this.initSelector()
-    }
+      initSelector() {
+        console.info('Write selector')
+      }
 
-    initSelector() {
-      console.info('Write selector')
-    }
+      componentDidMount() {
+        this.subscribeToStore()
+      }
 
-    componentDidMount() {
-      this.subscribeToStore()
-    }
+      componentWillUnmount() {
+        this.unsubscribe()
+        this.unsubscribe = noop
+      }
 
-    componentWillUnmount() {
-      this.unsubscribe()
-      this.unsubscribe = noop
-    }
+      handleUpdates = (state) => {
+        this.setState({ store: state })
+      };
 
-    handleUpdates = (state) => {
-      this.setState({ store: state })
-    };
+      subscribeToStore() {
+        this.unsubscribe = this.store.subscribe(this.handleUpdates)
+      }
 
-    subscribeToStore() {
-      this.unsubscribe = this.store.subscribe(this.handleUpdates)
-    }
-
-    render() {
-      return <WrappedComponent {...this.state.store} {...this.props} />
-    }
+      render() {
+        return (
+          <WrappedComponent
+            {...this.state.store}
+            {...this.commands}
+            {...this.props}
+          />
+        )
+      }
   }
 
   return Optux
 }
-
 
 /** @see https://codesandbox.io/s/x36l72v68q */

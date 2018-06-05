@@ -30,7 +30,10 @@
     "lens",
     "update"
   ],
-  "author": "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com/)",
+  "contributors": [
+    "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com/)",
+    "Viacheslav Bereza <mail@betula.co> (http://betula.co/)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/atomixinteractions/optux/issues"
