@@ -41,7 +41,7 @@ export class OptuxProvider extends Component {
 
 const noop = () => { }
 
-export const withOptice = (lenses, commands) => (WrappedComponent) => {
+export const withOptice = (mapLenses, bindCommands, mapStateToProps) => (WrappedComponent) => {
   class Optux extends Component {
       static contextTypes = {
         [storeKey]: storeShape,
@@ -55,6 +55,7 @@ export const withOptice = (lenses, commands) => (WrappedComponent) => {
         this.unsubscribe = noop
         this.commands = {}
         this.lensesValues = {}
+        this.extraProps = {}
 
         if (!this.store) {
           throw new TypeError('No store in context! Use OptuxProvider')
@@ -66,15 +67,15 @@ export const withOptice = (lenses, commands) => (WrappedComponent) => {
       }
 
       initCommands() {
-        this.commands = Object.keys(commands).reduce((all, name) => {
-          all[name] = this.store.execute.bind(null, commands[name])
+        this.commands = Object.keys(bindCommands).reduce((all, name) => {
+          all[name] = this.store.execute.bind(null, bindCommands[name])
           return all
         }, {})
       }
 
       readLenses() {
-        this.lensesValues = Object.keys(lenses).reduce((all, name) => {
-          all[name] = this.store.readState(lenses[name])
+        this.lensesValues = Object.keys(mapLenses).reduce((all, name) => {
+          all[name] = this.store.readState(mapLenses[name])
           return all
         }, {})
       }
