@@ -1,5 +1,6 @@
-/* eslint-disable react/prefer-stateless-function, react/no-multi-comp, react/require-default-props, react/no-unused-prop-types, react/sort-comp */
-import React, { Component, createElement } from 'react'
+/* eslint-disable react/prefer-stateless-function, react/no-multi-comp */
+/* eslint-disable react/require-default-props, react/no-unused-prop-types, react/sort-comp */
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 
@@ -39,7 +40,7 @@ export class OptuxProvider extends Component {
   }
 }
 
-const noop = () => { }
+const noop = () => {}
 
 export const withOptice = (mapLenses, bindCommands, mapStateToProps) => (WrappedComponent) => {
   class Optux extends Component {
@@ -62,30 +63,60 @@ export const withOptice = (mapLenses, bindCommands, mapStateToProps) => (Wrapped
         }
 
         this.initCommands()
-        this.initSelector()
         this.readLenses()
+        this.readExtraProps()
       }
 
       initCommands() {
+        if (!bindCommands) {
+          this.commands = {}
+          return
+        }
+
         this.commands = Object.keys(bindCommands).reduce((all, name) => {
+          // eslint-disable-next-line no-param-reassign
           all[name] = this.store.execute.bind(null, bindCommands[name])
           return all
         }, {})
       }
 
       readLenses() {
+        if (!mapLenses) {
+          this.lensesValues = {}
+          return
+        }
+
         this.lensesValues = Object.keys(mapLenses).reduce((all, name) => {
+          // eslint-disable-next-line no-param-reassign
           all[name] = this.store.readState(mapLenses[name])
           return all
         }, {})
       }
 
-      initSelector() {
-        console.info('Write selector')
+      readExtraProps(props) {
+        if (!mapStateToProps) {
+          this.extraProps = {}
+          return
+        }
+
+        if (typeof mapStateToProps === 'function') {
+          this.extraProps = mapStateToProps(
+            this.store.getState(),
+            props || this.props,
+          )
+        }
+        else {
+          this.extraProps = mapStateToProps
+        }
       }
 
       componentDidMount() {
         this.subscribeToStore()
+      }
+
+      shouldComponentUpdate(nextProps) {
+        this.readExtraProps(nextProps)
+        return true
       }
 
       componentWillUnmount() {
@@ -95,6 +126,7 @@ export const withOptice = (mapLenses, bindCommands, mapStateToProps) => (Wrapped
 
       handleUpdates = () => {
         this.readLenses()
+        this.readExtraProps()
         this.forceUpdate()
       };
 
@@ -105,9 +137,10 @@ export const withOptice = (mapLenses, bindCommands, mapStateToProps) => (Wrapped
       render() {
         return (
           <WrappedComponent
+            {...this.props}
             {...this.lensesValues}
             {...this.commands}
-            {...this.props}
+            {...this.extraProps}
           />
         )
       }
@@ -115,5 +148,4 @@ export const withOptice = (mapLenses, bindCommands, mapStateToProps) => (Wrapped
 
   return Optux
 }
-
 /** @see https://codesandbox.io/s/x36l72v68q */
