@@ -61,6 +61,6 @@
   },
   "peerDependencies": {
     "react": "^16.3.0",
-    "optice": "^0.1.0"
+    "optice": "^0.2.0"
   }
 }
